@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.hjazsbjava</groupId>
+  <artifactId>hjazsbjava</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>hjazsbjava</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>17</java.version>
+    <maven.compiler.release>17</maven.compiler.release>
+
+    <azure.functions.java.library.version>3.2.4</azure.functions.java.library.version>
+    <azure.functions.maven.plugin.version>1.41.0</azure.functions.maven.plugin.version>
+    <azure.identity.version>1.18.2</azure.identity.version>
+    <azure.servicebus.version>7.17.17</azure.servicebus.version>
+
+    <functionAppName>hjavapp</functionAppName>
+    <resourceGroup>hjservicebus</resourceGroup>
+    <region>westus</region>
+    <serviceBusNamespace>hjasbjava</serviceBusNamespace>
+    <serviceBusQueueName>orders</serviceBusQueueName>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.microsoft.azure.functions</groupId>
+      <artifactId>azure-functions-java-library</artifactId>
+      <version>${azure.functions.java.library.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-identity</artifactId>
+      <version>${azure.identity.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-messaging-servicebus</artifactId>
+      <version>${azure.servicebus.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.microsoft.azure</groupId>
+        <artifactId>azure-functions-maven-plugin</artifactId>
+        <version>${azure.functions.maven.plugin.version}</version>
+        <configuration>
+          <appName>${functionAppName}</appName>
+          <resourceGroup>${resourceGroup}</resourceGroup>
+          <region>${region}</region>
+          <runtime>
+            <os>linux</os>
+            <javaVersion>${java.version}</javaVersion>
+          </runtime>
+          <appSettings>
+            <property>
+              <name>SERVICEBUS_NAMESPACE</name>
+              <value>${serviceBusNamespace}</value>
+            </property>
+            <property>
+              <name>SERVICEBUS_QUEUE_NAME</name>
+              <value>${serviceBusQueueName}</value>
+            </property>
+          </appSettings>
+        </configuration>
+        <executions>
+          <execution>
+            <id>package-functions</id>
+            <goals>
+              <goal>package</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
